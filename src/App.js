@@ -1,5 +1,4 @@
 import { Component } from 'react';
-import logo from './logo.svg';
 import './App.css';
 import { render } from '@testing-library/react';
 
@@ -8,22 +7,43 @@ class App extends Component {
     super();
 
     this.state = {
-      name:{firstName: 'Serhii', lastName: 'Sukmaniuk'},
-      company: 'Elogic'
+      monsters: [],
+      searchValue: ''
     }
   };
+  componentDidMount() {
+    fetch('https://jsonplaceholder.typicode.com/users')
+    .then(response => response.json())
+    .then(monsters => this.setState( () => {
+      return { monsters };
+    }))
+  }
+
   render() {
+
+    const searchMonster = this.state.monsters.filter(monster => {
+      return monster.name.toLowerCase().includes(this.state.searchValue);
+     });
+
     return (
       <div className="App">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <p>
-            Hello, {this.state.name.firstName} {this.state.name.lastName}. I work in {this.state.company}
-          </p>
-         <button onClick={() => {
-          this.setState({name:{firstName: 'John', lastName: 'Doe'} });
-         }}>Change name</button>
-        </header>
+        <input type='search' onChange={(e) => {
+           const searchValue = e.target.value.toLowerCase();
+
+            this.setState(() => {
+              return { searchValue }
+            })
+           
+        }}/>
+       {
+        searchMonster.map( monster => {
+          return (
+            <div key={monster.id}>
+              <h1>{monster.name}</h1>
+            </div>
+          );
+        })
+       }
       </div>
     );
   }

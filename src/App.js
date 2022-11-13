@@ -1,6 +1,8 @@
 import { Component } from 'react';
 import './App.css';
 import { render } from '@testing-library/react';
+import CardList from './components/cards-list/card-list-component';
+import SearchBar from './components/search-bar/search-bar-component';
 
 class App extends Component {
   constructor() {
@@ -19,31 +21,28 @@ class App extends Component {
     }))
   }
 
+   searching = (e) => {
+    const searchValue = e.target.value.toLowerCase();
+
+     this.setState(() => {
+       return { searchValue }
+     })
+  
+ }
+
   render() {
 
-    const searchMonster = this.state.monsters.filter(monster => {
-      return monster.name.toLowerCase().includes(this.state.searchValue);
+    const { monsters, searchValue } = this.state;
+    const { searching } = this;
+
+    const searchMonster = monsters.filter(monster => {
+      return monster.name.toLowerCase().includes(searchValue);
      });
 
     return (
       <div className="App">
-        <input type='search' onChange={(e) => {
-           const searchValue = e.target.value.toLowerCase();
-
-            this.setState(() => {
-              return { searchValue }
-            })
-           
-        }}/>
-       {
-        searchMonster.map( monster => {
-          return (
-            <div key={monster.id}>
-              <h1>{monster.name}</h1>
-            </div>
-          );
-        })
-       }
+        <SearchBar searching={searching} />
+        <CardList monsters={ searchMonster } />
       </div>
     );
   }

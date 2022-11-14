@@ -41,7 +41,9 @@ class App extends Component {
 
     return (
       <div className="App">
-        <SearchBar searching={searching} />
+        <SearchBar searchHeandler={searching} 
+        className='monster-search-box' 
+        placeholder='Search monster' />
         <CardList monsters={ searchMonster } />
       </div>
     );
